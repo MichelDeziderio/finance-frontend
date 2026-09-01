@@ -1,0 +1,123 @@
+<div class="app-shell">
+  @if (isShow) {
+  <div class="sidebar-overlay" (click)="closeMenu()">
+  </div>
+  }
+
+  <aside class="sidebar" [class.menu-active]="isShow">
+    <div class="brand">
+      <div class="brand-icon">
+        <i class="pi pi-chart-bar"></i>
+      </div>
+
+      <strong>Finan<span>$e</span></strong>
+
+      @if (isShow) {
+      <p-button icon="pi pi-bars" [text]="true" severity="secondary" ariaLabel="Abrir menu" (click)="toggleMenu()" />
+      }
+
+    </div>
+
+    <nav class="menu">
+
+      <a
+        [routerLink]="getMenuLink('/dashboard')"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.disabled]="isMenuItemDisabled('/dashboard')"
+        [attr.aria-disabled]="isMenuItemDisabled('/dashboard')"
+        [attr.tabindex]="isMenuItemDisabled('/dashboard') ? -1 : 0"
+        [attr.title]="isMenuItemDisabled('/dashboard') ? 'Cadastre uma carteira para acessar esta tela.' : null"
+        (click)="handleMenuItemClick($event, '/dashboard')">
+        <i class="pi pi-chart-line"></i>
+        <span>Dashboard</span>
+      </a>
+      
+      <a
+        [routerLink]="getMenuLink('/movimentacoes')"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.disabled]="isMenuItemDisabled('/movimentacoes')"
+        [attr.aria-disabled]="isMenuItemDisabled('/movimentacoes')"
+        [attr.tabindex]="isMenuItemDisabled('/movimentacoes') ? -1 : 0"
+        [attr.title]="isMenuItemDisabled('/movimentacoes') ? 'Cadastre uma carteira para acessar esta tela.' : null"
+        (click)="handleMenuItemClick($event, '/movimentacoes')">
+        <i class="pi pi-list"></i>
+        <span>Movimentações</span>
+      </a>
+
+      <a
+        [routerLink]="getMenuLink('/movimentacoes/nova')"
+        routerLinkActive="active"
+        [class.disabled]="isMenuItemDisabled('/movimentacoes/nova')"
+        [attr.aria-disabled]="isMenuItemDisabled('/movimentacoes/nova')"
+        [attr.tabindex]="isMenuItemDisabled('/movimentacoes/nova') ? -1 : 0"
+        [attr.title]="isMenuItemDisabled('/movimentacoes/nova') ? 'Cadastre uma carteira para acessar esta tela.' : null"
+        (click)="handleMenuItemClick($event, '/movimentacoes/nova')">
+        <i class="pi pi-plus-circle"></i>
+        <span>Nova movimentação</span>
+      </a>
+
+      <a
+        [routerLink]="getMenuLink('/categorias')"
+        routerLinkActive="active"
+        [class.disabled]="isMenuItemDisabled('/categorias')"
+        [attr.aria-disabled]="isMenuItemDisabled('/categorias')"
+        [attr.tabindex]="isMenuItemDisabled('/categorias') ? -1 : 0"
+        [attr.title]="isMenuItemDisabled('/categorias') ? 'Cadastre uma carteira para acessar esta tela.' : null"
+        (click)="handleMenuItemClick($event, '/categorias')">
+        <i class="pi pi-tags"></i>
+        <span>Categorias</span>
+      </a>
+
+      <a
+        [routerLink]="getMenuLink('/carteiras')"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.disabled]="isMenuItemDisabled('/carteiras')"
+        [attr.aria-disabled]="isMenuItemDisabled('/carteiras')"
+        [attr.tabindex]="isMenuItemDisabled('/carteiras') ? -1 : 0"
+        (click)="handleMenuItemClick($event, '/carteiras')">
+        <i class="pi pi-wallet"></i>
+        <span>Carteiras</span>
+      </a>
+    </nav>
+
+
+  </aside>
+
+  <section class="workspace">
+    <header class="topbar">
+      <div class="topbar-left">
+        <p-button icon="pi pi-bars" [text]="true" severity="secondary" ariaLabel="Abrir menu" (click)="toggleMenu()" />
+
+        @if (financeService.wallets().length) {
+        <p-select
+          [options]="walletOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="financeService.activeWalletId()"
+          (ngModelChange)="selectWallet($event)"
+          placeholder="Selecione a carteira"
+          appendTo="body"
+        />
+        }
+      </div>
+
+      <div class="profile-area">
+        <div class="avatar">JM</div>
+
+        <div class="profile-copy">
+          <strong>João Maria</strong>
+          <span>Dono</span>
+        </div>
+
+        <i class="pi pi-chevron-down profile-chevron"></i>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <router-outlet />
+    </main>
+  </section>
+</div>
