@@ -108,7 +108,6 @@ export class FinanceService {
 
     if (walletId && refreshData) {
       this.listCategories().subscribe();
-      this.listMovements({ page: 1, limit: 100 }).subscribe();
     }
   }
 
@@ -211,7 +210,6 @@ export class FinanceService {
   refreshWalletData(): void {
     if (!this._activeWalletId()) return;
     this.listCategories().subscribe();
-    this.listMovements({ page: 1, limit: 100 }).subscribe();
   }
 
   private requireWalletId(): string | null {

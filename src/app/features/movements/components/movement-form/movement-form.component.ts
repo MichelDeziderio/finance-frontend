@@ -71,8 +71,6 @@ export class MovementFormComponent {
       const walletId = this.financeService.activeWalletId();
       if (!walletId) return;
 
-      this.financeService.listCategories().subscribe();
-
       if (this.movementId) {
         this.financeService.getMovementById(this.movementId).subscribe(movement => {
           if (!movement) return;
@@ -132,7 +130,10 @@ export class MovementFormComponent {
       : this.financeService.createMovement(payload);
 
     request$.subscribe({
-      next: () => this.router.navigate(['/movimentacoes']),
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'A sua movimentação foi criada com sucesso.' });
+        this.form.reset();
+      },
       error: error => this.messageService.add({
         severity: 'error',
         summary: 'Erro ao salvar',
@@ -142,7 +143,7 @@ export class MovementFormComponent {
   }
 
   cancel(): void {
-    this.router.navigate(['/movimentacoes']);
+    this.router.navigate(['/movimentacoes/nova']);
   }
 
   onCategoryCreated(categoryId: string): void {

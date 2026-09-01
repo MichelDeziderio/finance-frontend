@@ -21,32 +21,6 @@
     <nav class="menu">
 
       <a
-        [routerLink]="getMenuLink('/dashboard')"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        [class.disabled]="isMenuItemDisabled('/dashboard')"
-        [attr.aria-disabled]="isMenuItemDisabled('/dashboard')"
-        [attr.tabindex]="isMenuItemDisabled('/dashboard') ? -1 : 0"
-        [attr.title]="isMenuItemDisabled('/dashboard') ? 'Cadastre uma carteira para acessar esta tela.' : null"
-        (click)="handleMenuItemClick($event, '/dashboard')">
-        <i class="pi pi-chart-line"></i>
-        <span>Dashboard</span>
-      </a>
-      
-      <a
-        [routerLink]="getMenuLink('/movimentacoes')"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        [class.disabled]="isMenuItemDisabled('/movimentacoes')"
-        [attr.aria-disabled]="isMenuItemDisabled('/movimentacoes')"
-        [attr.tabindex]="isMenuItemDisabled('/movimentacoes') ? -1 : 0"
-        [attr.title]="isMenuItemDisabled('/movimentacoes') ? 'Cadastre uma carteira para acessar esta tela.' : null"
-        (click)="handleMenuItemClick($event, '/movimentacoes')">
-        <i class="pi pi-list"></i>
-        <span>Movimentações</span>
-      </a>
-
-      <a
         [routerLink]="getMenuLink('/movimentacoes/nova')"
         routerLinkActive="active"
         [class.disabled]="isMenuItemDisabled('/movimentacoes/nova')"
@@ -109,7 +83,6 @@
 
         <div class="profile-copy">
           <strong>João Maria</strong>
-          <span>Dono</span>
         </div>
 
         <i class="pi pi-chevron-down profile-chevron"></i>
