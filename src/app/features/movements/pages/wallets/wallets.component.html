@@ -1,0 +1,234 @@
+<p-toast styleClass="tooltip"/>
+<section class="page-container">
+
+  <div class="page-header">
+    <div>
+      <h1>Carteiras</h1>
+
+      <p>
+        Organize suas movimentações em carteiras pessoais ou empresariais.
+      </p>
+    </div>
+
+    <p-button label="Nova carteira" icon="pi pi-plus" (click)="openNewWallet()" />
+  </div>
+
+  <div class="wallets-grid">
+
+    @for (wallet of financeService.wallets(); track wallet.id) {
+
+    <article class="wallet-card" [class.active-wallet]="financeService.activeWalletId() === wallet.id"
+      [style.--wallet-color]="wallet.color" (click)="selectWallet(wallet)">
+
+      <div class="wallet-card-header">
+
+        <div class="wallet-identity">
+
+          <div class="wallet-icon" [style.background]="wallet.color">
+            <i [class]="getWalletIcon(wallet.type)"></i>
+          </div>
+
+          <div class="wallet-title">
+            <span class="wallet-name" [style.color]="wallet.color">
+              {{ wallet.name }}
+            </span>
+
+            <small>
+              {{ getWalletType(wallet.type) }}
+            </small>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="wallet-divider"></div>
+
+      <div class="wallet-footer">
+
+        <span class="wallet-type">
+          <i [class]="getWalletIcon(wallet.type)"></i>
+
+          {{ getWalletType(wallet.type) }}
+        </span>
+
+        <div class="wallet-actions" (click)="$event.stopPropagation()">
+
+          @if (financeService.activeWalletId() === wallet.id) {
+            <p-button icon="pi pi-check-circle" [text]="true" severity="success" pTooltip="Carteira selecionada" />
+          }
+
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" pTooltip="Editar carteira"
+            (click)="editWallet(wallet)" />
+
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Excluir carteira"
+            (click)="deleteWallet(wallet)" />
+
+        </div>
+
+      </div>
+
+    </article>
+
+    } @empty {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">
+        <i class="pi pi-wallet"></i>
+      </div>
+
+      <h2>Nenhuma carteira cadastrada</h2>
+
+      <p>
+        Cadastre sua primeira carteira para começar
+        a organizar suas movimentações.
+      </p>
+
+      <p-button label="Criar carteira" icon="pi pi-plus" (click)="openNewWallet()" />
+
+    </div>
+
+    }
+
+  </div>
+
+</section>
+
+<p-dialog [header]="selectedWalletId ? 'Editar carteira' : 'Nova carteira'" [(visible)]="showWalletDialog"
+  [modal]="true" [draggable]="false" [resizable]="false" [style]="{ width: '520px', maxWidth: '95vw' }"
+  (onHide)="closeWalletDialog()">
+  <form class="wallet-form" [formGroup]="walletForm" (ngSubmit)="saveWallet()">
+
+    <div class="form-field">
+      <label for="wallet-name">
+        Nome da carteira
+      </label>
+
+      <input id="wallet-name" type="text" pInputText formControlName="name" placeholder="Ex.: Carteira pessoal" />
+
+      @if (
+      walletForm.controls.name.touched &&
+      walletForm.controls.name.hasError('required')
+      ) {
+      <small class="field-error">
+        Informe o nome da carteira.
+      </small>
+      }
+
+      @if (
+      walletForm.controls.name.touched &&
+      walletForm.controls.name.hasError('minlength')
+      ) {
+      <small class="field-error">
+        O nome deve ter pelo menos 2 caracteres.
+      </small>
+      }
+    </div>
+
+
+    <div class="form-field">
+      <label for="wallet-type">
+        Tipo da carteira
+      </label>
+
+      <p-select inputId="wallet-type" formControlName="type" [options]="walletTypes" optionLabel="label"
+        optionValue="value" placeholder="Selecione o tipo" styleClass="w-full">
+        <ng-template pTemplate="selectedItem" let-selected>
+          @if (selected) {
+          <div class="wallet-type-option">
+            <i [class]="selected.icon"></i>
+            <span>{{ selected.label }}</span>
+          </div>
+          }
+        </ng-template>
+
+        <ng-template pTemplate="item" let-item>
+          <div class="wallet-type-option">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+
+    <div class="form-field">
+      <label>
+        Cor da carteira
+      </label>
+
+      <p>
+        Essa cor será utilizada na borda e no nome da carteira.
+      </p>
+
+      <div class="color-section">
+
+        <div class="color-presets">
+          @for (color of defaultColors; track color) {
+          <button type="button" class="color-option" [class.selected]="walletForm.controls.color.value === color"
+            [style.backgroundColor]="color" [attr.aria-label]="'Selecionar cor ' + color" (click)="selectColor(color)">
+            @if (
+            walletForm.controls.color.value === color
+            ) {
+            <i class="pi pi-check"></i>
+            }
+          </button>
+          }
+        </div>
+
+        <div class="custom-color">
+          <p-colorpicker formControlName="color" format="hex" />
+
+          <div>
+            <strong>Cor personalizada</strong>
+            <span>
+              Selecione qualquer outra cor.
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="wallet-preview">
+      <span>Prévia</span>
+
+      <div class="wallet-preview-card" [style.--preview-color]="walletForm.controls.color.value">
+        <div class="preview-icon" [style.backgroundColor]="walletForm.controls.color.value">
+          <i [class]="getWalletIcon(
+              walletForm.controls.type.value
+            )"></i>
+        </div>
+
+        <div>
+          <strong>
+            {{
+            walletForm.controls.name.value ||
+            'Nome da carteira'
+            }}
+          </strong>
+
+          <span>
+            {{
+            getWalletType(
+            walletForm.controls.type.value
+            )
+            }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="dialog-actions">
+      <p-button type="button" label="Cancelar" severity="secondary" [outlined]="true" (click)="closeWalletDialog()" />
+
+      <p-button type="submit" [label]="selectedWalletId ? 'Salvar alterações' : 'Cadastrar carteira'"
+        icon="pi pi-check" />
+    </div>
+
+  </form>
+</p-dialog>

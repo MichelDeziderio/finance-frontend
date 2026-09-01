@@ -1,0 +1,56 @@
+.category-form { padding-top: 4px; }
+.intro { color: var(--app-muted); font-size: 13px; margin: -4px 0 20px; }
+.field { margin-bottom: 20px; }
+.field label { display: block; font-size: 13px; font-weight: 750; margin-bottom: 8px; }
+.field label span { color: var(--app-red); }
+.field input { width: 100%; }
+.type-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.type-button {
+  height: 46px;
+  border-radius: 9px;
+  background: #fff;
+  font-weight: 750;
+  transition: .2s ease;
+}
+.type-button.income { border: 1px solid #9fe0bd; color: var(--app-green-dark); }
+.type-button.expense { border: 1px solid #f6b4af; color: var(--app-red); }
+.type-button.income.selected { background: #ecfdf3; box-shadow: inset 0 0 0 1px var(--app-green); }
+.type-button.expense.selected { background: #fff4f3; box-shadow: inset 0 0 0 1px var(--app-red); }
+.type-button:disabled { opacity: .75; cursor: not-allowed; }
+.preset-colors { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.color-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px #d0d5dd;
+}
+.color-dot.selected { box-shadow: 0 0 0 3px #101828; }
+.manual-picker {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px dashed #98a2b3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.manual-picker i { pointer-events: none; position: absolute; color: #344054; font-size: 11px; }
+:host ::ng-deep .manual-picker .p-colorpicker-preview {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  opacity: .06;
+}
+.selected-color {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  color: var(--app-muted);
+}
+.selected-color > span { width: 20px; height: 20px; border-radius: 50%; }
+.selected-color code { margin-left: auto; padding: 5px 8px; border-radius: 6px; background: #f2f4f7; color: #344054; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 6px; }

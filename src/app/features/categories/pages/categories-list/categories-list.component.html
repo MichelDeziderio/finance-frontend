@@ -1,0 +1,48 @@
+<p-toast styleClass="tooltip"/>
+<section class="page-container">
+  <header class="page-header">
+    <div>
+      <h1>Categorias</h1>
+      <p>Organize suas receitas e despesas por categorias.</p>
+    </div>
+    <p-button label="Nova categoria" icon="pi pi-plus" (onClick)="categoryDialogVisible.set(true)" />
+  </header>
+
+  <div class="surface-card table-wrapper">
+    <p-table [value]="financeService.categories()" [tableStyle]="{ 'min-width': '650px' }">
+      <ng-template #header>
+        <tr>
+          <th>Categoria</th>
+          <th>Tipo</th>
+          <th>Cor</th>
+          <th class="actions-column">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-category>
+        <tr>
+          <td><strong>{{ category.name }}</strong> @if (category.isDefault) { <small class="default-category">Padrão</small> }</td>
+          <td>
+            <span class="type-pill" [class.income]="category.type === 'income'" [class.expense]="category.type === 'expense'">
+              <i [class]="category.type === 'income' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+              {{ category.type === 'income' ? 'Receita' : 'Despesa' }}
+            </span>
+          </td>
+          <td>
+            <span class="color-cell"><i [style.background]="category.color"></i>{{ category.color }}</span>
+          </td>
+          <td class="actions-column">
+            @if (!category.isDefault) {
+            <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true" (onClick)="remove(category.id)" />
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</section>
+
+<app-category-dialog
+  [visible]="categoryDialogVisible()"
+  (visibleChange)="categoryDialogVisible.set($event)"
+  (categoryCreated)="created()"
+/>

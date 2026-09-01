@@ -1,0 +1,82 @@
+<p-dialog
+  header="Nova categoria"
+  [modal]="true"
+  [visible]="visible"
+  (visibleChange)="visibleChange.emit($event)"
+  [style]="{ width: '520px', maxWidth: 'calc(100vw - 24px)' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form class="category-form" [formGroup]="form" (ngSubmit)="save()">
+    <div class="intro">Crie uma categoria para organizar suas movimentações.</div>
+
+    <div class="field">
+      <label for="category-name">Nome da categoria <span>*</span></label>
+      <input id="category-name" pInputText formControlName="name" placeholder="Ex.: Educação" />
+      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+        <small class="form-error">Informe o nome da categoria.</small>
+      }
+      @if (form.controls.name.hasError('minlength')) {
+        <small class="form-error">O nome deve ter pelo menos 2 caracteres.</small>
+      }
+      @if (form.controls.name.hasError('duplicated')) {
+        <small class="form-error">Já existe uma categoria com esse nome para o tipo selecionado.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Tipo da categoria <span>*</span></label>
+      <div class="type-buttons">
+        <button
+          type="button"
+          class="type-button income"
+          [class.selected]="form.controls.type.value === 'income'"
+          [disabled]="!!forcedType"
+          (click)="form.controls.type.setValue('income')"
+        >
+          <i class="pi pi-arrow-up"></i> Receita
+        </button>
+        <button
+          type="button"
+          class="type-button expense"
+          [class.selected]="form.controls.type.value === 'expense'"
+          [disabled]="!!forcedType"
+          (click)="form.controls.type.setValue('expense')"
+        >
+          <i class="pi pi-arrow-down"></i> Despesa
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cor da categoria</label>
+      <div class="preset-colors">
+        @for (color of presetColors; track color) {
+          <button
+            type="button"
+            class="color-dot"
+            [class.selected]="form.controls.color.value === color"
+            [style.background]="color"
+            (click)="chooseColor(color)"
+            [attr.aria-label]="'Selecionar cor ' + color"
+          ></button>
+        }
+        <span class="manual-picker" title="Escolher uma cor manualmente">
+          <p-colorpicker formControlName="color" />
+          <i class="pi pi-plus"></i>
+        </span>
+      </div>
+
+      <div class="selected-color">
+        <span [style.background]="form.controls.color.value"></span>
+        <strong>Cor selecionada</strong>
+        <code>{{ form.controls.color.value }}</code>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true" type="button" (onClick)="close()" />
+      <p-button label="Salvar categoria" icon="pi pi-check" type="submit" />
+    </div>
+  </form>
+</p-dialog>
