@@ -1,0 +1,143 @@
+<p-toast styleClass="tooltip"/>
+<section class="page-container">
+  <div class="breadcrumb">
+    <button type="button" (click)="cancel()"><i class="pi pi-arrow-left"></i></button>
+    <div>
+      <span>Movimentações</span>
+      <i class="pi pi-chevron-right"></i>
+      <strong>{{ editing ? 'Editar movimentação' : 'Nova movimentação' }}</strong>
+    </div>
+  </div>
+
+  <form class="surface-card movement-card" [formGroup]="form" (ngSubmit)="save()">
+    <header class="form-heading">
+      <h1>{{ editing ? 'Editar movimentação' : 'Nova movimentação' }}</h1>
+      <p>Cadastre uma receita ou despesa</p>
+    </header>
+
+    <div class="form-grid">
+      <div class="field full type-field">
+        <label>Tipo de movimentação <span>*</span></label>
+        <div class="type-selector">
+          <button
+            type="button"
+            class="type-option income"
+            [class.selected]="movementType() === 'income'"
+            (click)="setType('income')"
+          >
+            <i class="pi pi-arrow-up"></i> Receita
+          </button>
+          <button
+            type="button"
+            class="type-option expense"
+            [class.selected]="movementType() === 'expense'"
+            (click)="setType('expense')"
+          >
+            <i class="pi pi-arrow-down"></i> Despesa
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Descrição <span>*</span></label>
+        <input id="description" pInputText formControlName="description" placeholder="Ex.: Salário, Supermercado, Aluguel..." />
+        @if (isInvalid('description')) {
+          <small class="form-error">Informe uma descrição entre 3 e 80 caracteres.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label>Categoria <span>*</span></label>
+        <div class="category-row">
+          <p-select
+            formControlName="categoryId"
+            [options]="availableCategories()"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Selecione uma categoria"
+            [fluid]="true"
+          />
+          <p-button
+            icon="pi pi-plus"
+            [outlined]="true"
+            ariaLabel="Criar categoria"
+            (onClick)="categoryDialogVisible.set(true)"
+          />
+        </div>
+        @if (isInvalid('categoryId')) {
+          <small class="form-error">Selecione uma categoria.</small>
+        }
+        <small class="field-hint">A lista mostra somente categorias do tipo {{ movementType() === 'income' ? 'Receita' : 'Despesa' }}.</small>
+      </div>
+
+      <div class="field">
+        <label>Valor (R$) <span>*</span></label>
+        <p-inputnumber
+          formControlName="amount"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          [min]="0"
+          [minFractionDigits]="2"
+          [fluid]="true"
+        />
+        @if (isInvalid('amount')) {
+          <small class="form-error">Informe um valor maior que zero.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label>Data <span>*</span></label>
+        <p-datepicker
+          formControlName="date"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          [fluid]="true"
+        />
+        @if (isInvalid('date')) {
+          <small class="form-error">Informe a data da movimentação.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label>Forma de pagamento <span>*</span></label>
+        <p-select
+          formControlName="paymentMethod"
+          [options]="paymentMethods"
+          placeholder="Selecione a forma de pagamento"
+          [fluid]="true"
+        />
+        @if (isInvalid('paymentMethod')) {
+          <small class="form-error">Selecione a forma de pagamento.</small>
+        }
+      </div>
+
+      <div class="field full">
+        <label>Observação <small>(opcional)</small></label>
+        <textarea
+          pTextarea
+          formControlName="notes"
+          rows="5"
+          placeholder="Adicione uma observação..."
+          [autoResize]="false"
+        ></textarea>
+        <div class="counter">{{ form.controls.notes.value.length }} / 200</div>
+        @if (isInvalid('notes')) {
+          <small class="form-error">A observação deve possuir no máximo 200 caracteres.</small>
+        }
+      </div>
+    </div>
+
+    <footer class="form-actions">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true" type="button" (onClick)="cancel()" />
+      <p-button label="Salvar" icon="pi pi-save" type="submit" />
+    </footer>
+  </form>
+</section>
+
+<app-category-dialog
+  [visible]="categoryDialogVisible()"
+  [forcedType]="movementType()"
+  (visibleChange)="categoryDialogVisible.set($event)"
+  (categoryCreated)="onCategoryCreated($event)"
+/>
