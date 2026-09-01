@@ -1,20 +1,8 @@
 # Sistema de Controle Financeiro - Frontend
 
-## AC1 - Cadastro de Movimentacoes
-
 ## Objetivo
 
-A AC1 apresenta a estrutura inicial da interface para organizar carteiras, categorias e movimentacoes financeiras.
-
-## Funcionalidades
-
-- Layout principal com navegacao entre as areas da aplicacao.
-- Cadastro, edicao, exclusao e selecao da carteira ativa.
-- Cadastro e consulta de categorias por tipo.
-- Criacao rapida de categorias no formulario de movimentacao.
-- Cadastro de receitas e despesas.
-- Validacoes de formulario com Reactive Forms.
-- Integracao HTTP com a API para carteiras, categorias e movimentacoes.
+Interface Angular para cadastro, consulta e visualizacao de dados financeiros organizados por carteira.
 
 ## Tecnologias
 
@@ -52,24 +40,36 @@ src/app/
 
 ### AC1 - Cadastro de Movimentacoes
 
-Estrutura inicial, carteiras, categorias, receitas, despesas, validacoes e integracao inicial com a API.
+- Layout principal e navegacao.
+- Carteiras com selecao da carteira ativa.
+- Categorias e criacao rapida no formulario.
+- Cadastro de receitas e despesas.
+- Validacoes com Reactive Forms.
+- Integracao HTTP inicial com a API.
+
+Status: concluida.
+
+### AC2 - Historico de Movimentacoes
+
+- Listagem paginada de movimentacoes.
+- Busca por descricao.
+- Filtros por tipo, categoria e periodo.
+- Edicao e exclusao de movimentacoes.
+
+Status: concluida.
+
+### AC3 - Dashboard Financeiro
+
+- Resumo de receitas, despesas e saldo.
+- Graficos de receitas x despesas e despesas por categoria.
+- Comparacao com o periodo anterior.
+- Filtro de periodo.
+- Secao com as 10 ultimas movimentacoes.
 
 Status: concluida.
 
 Status da AC1: concluida.
 
-## AC2 - Historico de Movimentacoes
-
-- Listagem paginada de movimentacoes.
-- Busca por descricao.
-- Filtros por tipo, categoria e periodo.
-- Edicao de movimentacoes.
-- Exclusao de movimentacoes.
-
 Status da AC2: concluida.
 
-### AC2 - Historico de Movimentacoes
-
-Historico, filtros, edicao e exclusao de movimentacoes.
-
-Status: concluida.
+Status da AC3: concluida.
