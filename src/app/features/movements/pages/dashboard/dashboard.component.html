@@ -1,0 +1,585 @@
+<section class="dashboard page-container">
+
+  <!-- FILTROS -->
+
+  <header class="page-header">
+    <div>
+      <h1>Movimentações</h1>
+      <p>Gerencie suas receitas e despesas.</p>
+    </div>
+    <p-datepicker [(ngModel)]="selectedPeriod" (ngModelChange)="$event?.[1] && loadDashboard()" selectionMode="range" [readonlyInput]="true" dateFormat="dd/mm/yy"
+          placeholder="Selecione o período" [showIcon]="true" [showButtonBar]="true" appendTo="body" />
+  </header>
+
+
+  <!-- HEADER -->
+
+  <section class="period-highlight" [class.positive]="
+      hasSavedComparedToPreviousPeriod()
+    " [class.negative]="
+      !hasSavedComparedToPreviousPeriod() &&
+      hasPreviousPeriodData()
+    ">
+
+    <div class="period-content">
+
+      <span class="period-label">
+        Saldo do período
+      </span>
+
+      <strong class="period-value">
+        R$ {{
+        currentBalance().toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+          })
+        }}
+      </strong>
+
+
+      @if (hasPreviousPeriodData()) {
+
+      @if (
+      hasSavedComparedToPreviousPeriod()
+      ) {
+
+      <div class="
+              period-comparison
+              positive-comparison
+            ">
+        <i class="pi pi-arrow-up"></i>
+
+        <strong>
+          {{ savingPercentage() }}%
+        </strong>
+
+        <span>
+          vs período anterior
+        </span>
+      </div>
+
+
+      <div class="congratulations">
+        <i class="pi pi-sparkles"></i>
+
+        <span>
+          Parabéns! Você economizou
+          mais neste período.
+        </span>
+      </div>
+
+      } @else {
+
+      <div class="
+              period-comparison
+              negative-comparison
+            ">
+        <i class="pi pi-arrow-down"></i>
+
+        <strong>
+          {{ savingPercentage() }}%
+        </strong>
+
+        <span>
+          vs período anterior
+        </span>
+      </div>
+
+
+      <div class="attention-message">
+        <i class="
+                pi
+                pi-exclamation-circle
+              "></i>
+
+        <span>
+          Seu saldo diminuiu em
+          relação ao período anterior.
+        </span>
+      </div>
+
+      }
+
+      } @else {
+
+      <div class="period-info">
+        <i class="pi pi-info-circle"></i>
+
+        Ainda não existem dados suficientes
+        para comparar com o período anterior.
+      </div>
+
+      }
+
+    </div>
+
+
+    @if (
+    hasSavedComparedToPreviousPeriod()
+    ) {
+
+    <div class="growth-illustration">
+
+      <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+
+        <g class="chart-bars">
+
+          <rect x="65" y="135" width="48" height="55" rx="7" />
+
+          <rect x="135" y="105" width="48" height="85" rx="7" />
+
+          <rect x="205" y="72" width="48" height="118" rx="7" />
+
+        </g>
+
+
+        <path class="growth-line" d="
+              M55 155
+              L135 115
+              L190 130
+              L290 45
+            " fill="none" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+
+
+        <path class="growth-arrow" d="
+              M260 38
+              L305 28
+              L297 73
+            " fill="none" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
+
+      </svg>
+
+    </div>
+
+    }
+
+  </section>
+
+
+  <!-- CARDS -->
+
+  <section class="summary-grid">
+
+    <article class="summary-card income">
+
+      <div class="summary-header">
+
+        <span>
+          Receitas
+        </span>
+
+        <div class="summary-icon">
+          <i class="pi pi-arrow-up"></i>
+        </div>
+
+      </div>
+
+
+      <strong>
+        R$ {{
+          totalIncome().toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+          })
+        }}
+      </strong>
+
+
+      <div class="mini-chart">
+
+        <p-chart type="line" [data]="incomeMiniChart()" [options]="miniChartOptions" class="mini-chart-styled"/>
+
+      </div>
+
+    </article>
+
+
+    <article class="summary-card expense">
+
+      <div class="summary-header">
+
+        <span>
+          Despesas
+        </span>
+
+        <div class="summary-icon">
+          <i class="pi pi-arrow-down"></i>
+        </div>
+
+      </div>
+
+
+      <strong>
+        R$ {{
+          totalExpense().toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+          })
+        }}
+      </strong>
+
+
+      <div class="mini-chart">
+
+        <p-chart type="line" [data]="expenseMiniChart()" [options]="miniChartOptions" class="mini-chart-styled" />
+
+      </div>
+
+    </article>
+
+
+    <article class="summary-card balance">
+
+      <div class="summary-header">
+
+        <span>
+          Saldo
+        </span>
+
+        <div class="summary-icon">
+          <i class="pi pi-wallet"></i>
+        </div>
+
+      </div>
+
+
+      <strong>
+        R$ {{
+        currentBalance().toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+        })
+        }}
+      </strong>
+
+
+      <div class="mini-chart">
+
+        <p-chart type="line" [data]="balanceMiniChart()" [options]="miniChartOptions" class="mini-chart-styled" />
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <!-- GRÁFICOS -->
+
+  <section class="charts-grid">
+
+    <article class="
+        chart-card
+        chart-line
+      ">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            Receitas x Despesas
+          </h2>
+
+          <span>
+            Comparativo no período selecionado
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="chart-content">
+
+        <p-chart type="line" [data]="incomeExpenseChart()" [options]="incomeExpenseOptions" height="330px"/>
+
+      </div>
+
+    </article>
+
+
+    <article class="
+        chart-card
+        category-card
+      ">
+
+      <div class="card-header">
+
+        <div>
+
+          <h2>
+            Despesas por categoria
+          </h2>
+
+          <span>
+            Distribuição dos gastos
+          </span>
+
+        </div>
+
+      </div>
+
+
+      @if (
+      categoryExpenses().length
+      ) {
+
+      <div class="
+            category-chart-content
+          ">
+
+        <div class="doughnut-wrapper">
+
+          <p-chart type="doughnut" [data]="categoryChart()" [options]="categoryChartOptions" />
+
+        </div>
+
+
+        <div class="
+              category-list
+            ">
+
+          @for (
+          category
+          of categoryExpenses();
+          track category.id
+          ) {
+
+          <div class="
+                  category-item
+                ">
+
+            <div class="
+                    category-name
+                  ">
+
+              <span class="
+                      category-dot
+                    " [style.background]="
+                      category.color
+                    "></span>
+
+              <span>
+                {{ category.name }}
+              </span>
+
+            </div>
+
+
+            <strong>
+              R$ {{
+                category.amount.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+                })
+              }}
+            </strong>
+
+
+            <span class="
+                    category-percent
+                  ">
+              {{
+              category.percentage
+              }}%
+            </span>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+      } @else {
+
+      <div class="chart-empty">
+
+        <i class="pi pi-chart-pie"></i>
+
+        <strong>
+          Nenhuma despesa encontrada
+        </strong>
+
+        <span>
+          Não existem despesas para os
+          filtros selecionados.
+        </span>
+
+      </div>
+
+      }
+
+    </article>
+
+  </section>
+
+
+  <!-- RESUMO -->
+
+  <section class="period-summary">
+
+    <div class="section-title">
+      <h2>
+        Resumo do período
+      </h2>
+    </div>
+
+
+    <div class="
+        period-summary-grid
+      ">
+
+      <article class="period-item">
+
+        <div class="
+            period-item-icon
+            green
+          ">
+          <i class="pi pi-arrow-up"></i>
+        </div>
+
+
+        <div>
+
+          <span>
+            Maior Receita
+          </span>
+
+          <small>
+            {{
+            biggestIncome()
+            ?.description ??
+            'Nenhuma receita'
+            }}
+          </small>
+
+          <strong>
+            R$ {{
+            (
+            biggestIncome()
+            ?.amount ??
+            0
+            ).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+            })
+            }}
+          </strong>
+
+        </div>
+
+      </article>
+
+
+      <article class="period-item">
+
+        <div class="
+            period-item-icon
+            red
+          ">
+          <i class="pi pi-arrow-down"></i>
+        </div>
+
+
+        <div>
+
+          <span>
+            Maior Despesa
+          </span>
+
+          <small>
+            {{
+            biggestExpense()
+            ?.description ??
+            'Nenhuma despesa'
+            }}
+          </small>
+
+          <strong>
+            R$ {{
+            (
+            biggestExpense()
+            ?.amount ??
+            0
+            ).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+            })
+            }}
+          </strong>
+
+        </div>
+
+      </article>
+
+
+      <article class="period-item">
+
+        <div class="
+            period-item-icon
+            purple
+          ">
+          <i class="pi pi-chart-bar"></i>
+        </div>
+
+
+        <div>
+
+          <span>
+            Média de Despesas
+          </span>
+
+          <strong>
+            R$ {{
+            averageExpense().toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+            })
+            }}
+          </strong>
+
+          <small>
+            por movimentação
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <article class="period-item">
+
+        <div class="
+            period-item-icon
+            orange
+          ">
+          <i class="pi pi-receipt"></i>
+        </div>
+
+
+        <div>
+
+          <span>
+            Total de Movimentações
+          </span>
+
+          <strong>
+            {{ totalMovements() }}
+          </strong>
+
+          <small>
+            no período
+          </small>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</section>
