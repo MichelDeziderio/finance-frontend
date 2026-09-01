@@ -10,6 +10,7 @@ export const routes: Routes = [
   { path: 'carteiras', component: WalletsComponent },
   { path: 'movimentacoes', component: MovementsListComponent, canActivate: [walletAccessGuard] },
   { path: 'movimentacoes/nova', component: MovementFormComponent, canActivate: [walletAccessGuard] },
+  { path: 'movimentacoes/:id/editar', component: MovementFormComponent, canActivate: [walletAccessGuard] },
   { path: 'categorias', component: CategoriesListComponent, canActivate: [walletAccessGuard] },
   { path: '**', redirectTo: 'carteiras' }
 ];
