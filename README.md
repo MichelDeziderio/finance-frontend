@@ -57,3 +57,19 @@ Estrutura inicial, carteiras, categorias, receitas, despesas, validacoes e integ
 Status: concluida.
 
 Status da AC1: concluida.
+
+## AC2 - Historico de Movimentacoes
+
+- Listagem paginada de movimentacoes.
+- Busca por descricao.
+- Filtros por tipo, categoria e periodo.
+- Edicao de movimentacoes.
+- Exclusao de movimentacoes.
+
+Status da AC2: concluida.
+
+### AC2 - Historico de Movimentacoes
+
+Historico, filtros, edicao e exclusao de movimentacoes.
+
+Status: concluida.
