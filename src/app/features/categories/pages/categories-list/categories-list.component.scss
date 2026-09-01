@@ -1,0 +1,18 @@
+.table-wrapper { overflow: hidden; }
+:host ::ng-deep .p-datatable-header-cell { background: #f9fafb; color: #475467; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+.type-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; }
+.type-pill.income { color: var(--app-green-dark); }
+.type-pill.expense { color: var(--app-red); }
+.color-cell { display: inline-flex; align-items: center; gap: 9px; color: #475467; font-size: 13px; }
+.color-cell i { width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 1px #d0d5dd; }
+.actions-column { text-align: right; width: 100px; }
+
+.default-category {
+  margin-left: .5rem;
+  padding: .15rem .45rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: .7rem;
+  font-weight: 600;
+}
