@@ -69,9 +69,9 @@
           mode="currency"
           currency="BRL"
           locale="pt-BR"
-          [min]="0"
           [minFractionDigits]="2"
           [fluid]="true"
+          placeholder="R$ 0,00"
         />
         @if (isInvalid('amount')) {
           <small class="form-error">Informe um valor maior que zero.</small>
