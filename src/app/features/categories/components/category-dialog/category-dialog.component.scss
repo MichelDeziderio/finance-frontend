@@ -54,3 +54,41 @@
 .selected-color > span { width: 20px; height: 20px; border-radius: 50%; }
 .selected-color code { margin-left: auto; padding: 5px 8px; border-radius: 6px; background: #f2f4f7; color: #344054; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 6px; }
+/* CUSTOM COLOR */
+
+:host ::ng-deep .p-colorpicker-panel {
+  top: -170px;
+}
+
+.custom-color {
+  margin-top: 20px;
+  min-height: 62px;
+
+  padding: 12px 14px;
+
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.custom-color>div {
+  display: grid;
+  gap: 3px;
+}
+
+.custom-color strong {
+  color: var(--app-navy);
+
+  font-size: 13px;
+}
+
+.custom-color span {
+  color: var(--app-muted);
+
+  font-size: 11px;
+}

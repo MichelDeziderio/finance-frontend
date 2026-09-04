@@ -61,16 +61,18 @@
             [attr.aria-label]="'Selecionar cor ' + color"
           ></button>
         }
-        <span class="manual-picker" title="Escolher uma cor manualmente">
-          <p-colorpicker formControlName="color" />
-          <i class="pi pi-plus"></i>
-        </span>
       </div>
 
-      <div class="selected-color">
-        <span [style.background]="form.controls.color.value"></span>
-        <strong>Cor selecionada</strong>
-        <code>{{ form.controls.color.value }}</code>
+      <div class="custom-color">
+        <p-colorpicker formControlName="color" format="hex" [inline]="false" />
+
+        <div>
+          <strong>Cor personalizada</strong>
+          <span>
+            Selecione qualquer outra cor.
+          </span>
+        </div>
+
       </div>
     </div>
 
