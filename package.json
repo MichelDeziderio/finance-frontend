@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "ng serve",
-    "build": "ng build",
+    "build": "node scripts/generate-production-environment.mjs && ng build",
     "test": "ng test"
   },
   "dependencies": {
