@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -60,7 +60,7 @@ export class MovementFormComponent {
     type: this.fb.nonNullable.control<MovementType>('income', Validators.required),
     description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
     categoryId: ['', Validators.required],
-    amount: [0, [Validators.required, Validators.min(0.01)]],
+    amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
     date: [new Date(), Validators.required],
     paymentMethod: ['', Validators.required],
     notes: ['', Validators.maxLength(200)]
@@ -119,8 +119,11 @@ export class MovementFormComponent {
     }
 
     const raw = this.form.getRawValue();
+    if (raw.amount === null) return;
+
     const payload = {
       ...raw,
+      amount: raw.amount,
       date: this.toDateString(raw.date),
       notes: raw.notes.trim() || undefined
     };
