@@ -102,7 +102,7 @@ export class WalletsComponent {
 
   selectWallet(wallet: Wallet): void {
     this.financeService.setActiveWallet(wallet.id);
-    this.router.navigate(['/movimentacoes/nova']);
+    this.router.navigate(['/dashboard']);
   }
 
   getWalletIcon(type: Wallet['type']): string {
