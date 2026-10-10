@@ -147,7 +147,7 @@ export class MovementFormComponent {
   }
 
   cancel(): void {
-    this.router.navigate(['/movimentacoes/nova']);
+    this.router.navigate(['/movimentacoes']);
   }
 
   onCategoryCreated(categoryId: string): void {
