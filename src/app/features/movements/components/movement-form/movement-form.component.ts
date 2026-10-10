@@ -136,6 +136,7 @@ export class MovementFormComponent {
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'A sua movimentação foi criada com sucesso.' });
         this.form.reset();
+        this.router.navigate(['/movimentacoes']);
       },
       error: error => this.messageService.add({
         severity: 'error',

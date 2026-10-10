@@ -8,10 +8,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { FinanceService } from '../../../../core/services/finance.service';
 import { Wallet } from '../../../../models/finance.models';
 import { Router } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-wallets',
@@ -25,9 +26,10 @@ import { Router } from '@angular/router';
     SelectModule,
     ColorPickerModule,
     TooltipModule,
-    ToastModule
+    ToastModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './wallets.component.html',
   styleUrl: './wallets.component.scss',
 })
@@ -39,6 +41,7 @@ export class WalletsComponent {
 
   showWalletDialog = false;
   selectedWalletId: string | null = null;
+  readonly confirmationService = inject(ConfirmationService);
 
   readonly walletTypes = [
     { label: 'Pessoal', value: 'personal', icon: 'pi pi-user' },
@@ -117,9 +120,31 @@ export class WalletsComponent {
   }
 
   deleteWallet(wallet: Wallet): void {
-    this.financeService.deleteWallet(wallet.id).subscribe({
-      next: () => this.messageService.add({ severity: 'success', summary: 'Carteira excluída', detail: 'Carteira e seus dados foram removidos.' }),
-      error: error => this.showError(error, 'Não foi possível excluir a carteira.')
+
+    this.confirmationService.confirm({
+      header: 'Confirmação',
+      message: 'Deseja mesmo excluir essa carteira?',
+      icon: 'pi pi-exclamation-circle',
+      rejectButtonProps: {
+          label: 'Cancelar',
+          icon: 'pi pi-times',
+          variant: 'outlined',
+          size: 'small'
+        },
+        acceptButtonProps: {
+          label: 'Excluir',
+          icon: 'pi pi-trash',
+          variant: 'danger',
+          size: 'small'
+      },
+      accept: () => {
+        this.financeService.deleteWallet(wallet.id).subscribe({
+          next: () => this.messageService.add({ severity: 'success', summary: 'Carteira excluída', detail: 'Carteira e seus dados foram removidos.' }),
+          error: error => this.showError(error, 'Não foi possível excluir a carteira.')
+        });
+      },
+      reject: () => {
+      }
     });
   }
 
