@@ -1,13 +1,5 @@
 <p-toast styleClass="tooltip"/>
 <section class="page-container">
-  <div class="breadcrumb">
-    <button type="button" (click)="cancel()"><i class="pi pi-arrow-left"></i></button>
-    <div>
-      <span>Movimentações</span>
-      <i class="pi pi-chevron-right"></i>
-      <strong>{{ editing ? 'Editar movimentação' : 'Nova movimentação' }}</strong>
-    </div>
-  </div>
 
   <form class="surface-card movement-card" [formGroup]="form" (ngSubmit)="save()">
     <header class="form-heading">
@@ -77,9 +69,9 @@
           mode="currency"
           currency="BRL"
           locale="pt-BR"
-          [min]="0"
           [minFractionDigits]="2"
           [fluid]="true"
+          placeholder="R$ 0,00"
         />
         @if (isInvalid('amount')) {
           <small class="form-error">Informe um valor maior que zero.</small>
