@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { FinanceService } from '../../core/services/finance.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -14,10 +15,15 @@ import { FinanceService } from '../../core/services/finance.service';
 })
 export class AppShellComponent {
   readonly financeService = inject(FinanceService);
+  readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   isShow = false;
   readonly hasWallets = this.financeService.hasWallets;
   readonly hasNoWallets = computed(() => this.financeService.walletsLoaded() && !this.hasWallets());
+
+  readonly userName = computed(() => this.authService.currentUser()?.name || 'Usuário');
+  readonly userEmail = computed(() => this.authService.currentUser()?.email || '');
+  readonly userInitials = this.authService.userInitials;
 
   readonly walletOptions = computed(() => this.financeService.wallets().map(wallet => ({
     label: wallet.name,
@@ -57,5 +63,9 @@ export class AppShellComponent {
 
   selectWallet(walletId: string): void {
     this.financeService.setActiveWallet(walletId);
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

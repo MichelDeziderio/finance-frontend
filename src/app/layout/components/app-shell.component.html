@@ -105,13 +105,16 @@
       </div>
 
       <div class="profile-area">
-        <div class="avatar">JM</div>
+        <div class="avatar">{{ userInitials() }}</div>
 
         <div class="profile-copy">
-          <strong>João Maria</strong>
+          <strong>{{ userName() }}</strong>
+          <span>{{ userEmail() }}</span>
         </div>
 
-        <i class="pi pi-chevron-down profile-chevron"></i>
+        <button type="button" class="btn-logout" title="Sair da conta" (click)="logout()">
+          <i class="pi pi-sign-out"></i>
+        </button>
       </div>
     </header>
 
