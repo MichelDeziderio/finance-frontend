@@ -143,7 +143,7 @@ O dashboard consome `GET /api/wallets/:walletId/dashboard` e apresenta:
 - evolução diária de receitas e despesas;
 - as dez movimentações mais recentes.
 
-O detalhamento do tratamento e do contrato de resposta está em [fluxo-e-tratamento-de-dados-do-dashboard.md](../fluxo-e-tratamento-de-dados-do-dashboard.md).
+O tratamento dos dados e o contrato de resposta estão documentados neste README, na seção de dashboard do backend.
 
 ## Entregas acadêmicas
 
