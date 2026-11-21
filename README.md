@@ -173,4 +173,5 @@ Login, cadastro, JWT, guards, interceptor, perfil, alteração de senha e recupe
 
 ## Documentação relacionada
 
+- [Diagramas UML — Classes e Casos de Uso](docs/diagramas.md) — diagramas Mermaid renderizados diretamente no GitHub.
 - [Backend e API](https://github.com/MichelDeziderio/finance-backend/blob/main/README.md)
