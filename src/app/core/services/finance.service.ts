@@ -14,12 +14,14 @@ import {
   WalletPayload
 } from '../../models/finance.models';
 import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
 
 const ACTIVE_WALLET_KEY = 'finance.active-wallet-id';
 
 @Injectable({ providedIn: 'root' })
 export class FinanceService {
   private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
   private readonly apiUrl = environment.apiUrl;
 
   private readonly _wallets = signal<Wallet[]>([]);
@@ -42,10 +44,28 @@ export class FinanceService {
   readonly expenseCategories = computed(() => this._categories().filter(category => category.type === 'expense'));
 
   constructor() {
-    this.loadWallets().subscribe();
+    // As informações financeiras não podem sobreviver à troca de usuário.
+    this.auth.sessionChanges$.subscribe(() => {
+      this.resetSessionData();
+      if (this.auth.isAuthenticated()) this.loadWallets().subscribe();
+    });
+    if (this.auth.isAuthenticated()) this.loadWallets().subscribe();
+  }
+
+  private resetSessionData(): void {
+    this._wallets.set([]);
+    this._walletsLoaded.set(false);
+    this._categories.set([]);
+    this._movements.set([]);
+    this._movementMeta.set({ page: 1, limit: 10, total: 0, totalPages: 0 });
+    this._activeWalletId.set(null);
+    this.walletsRequest$ = null;
+    sessionStorage.removeItem(ACTIVE_WALLET_KEY);
   }
 
   loadWallets(force = false): Observable<Wallet[]> {
+    const requestToken = this.auth.token();
+    if (!requestToken) return of([]);
     if (!force) {
       if (this._walletsLoaded()) return of(this._wallets());
       if (this.walletsRequest$) return this.walletsRequest$;
@@ -53,6 +73,8 @@ export class FinanceService {
 
     const request$ = this.http.get<Wallet[]>(`${this.apiUrl}/wallets`).pipe(
       tap(wallets => {
+        // Ignora respostas que chegaram após logout ou troca de conta.
+        if (this.auth.token() !== requestToken) return;
         this._wallets.set(wallets);
         this._walletsLoaded.set(true);
         const savedId = this._activeWalletId();
@@ -63,7 +85,7 @@ export class FinanceService {
         if (activeId) this.refreshWalletData();
       }),
       finalize(() => {
-        this.walletsRequest$ = null;
+        if (this.auth.token() === requestToken) this.walletsRequest$ = null;
       }),
       shareReplay(1)
     );
@@ -118,6 +140,7 @@ export class FinanceService {
     if (type) params = params.set('type', type);
     return this.http.get<Category[]>(`${this.apiUrl}/wallets/${walletId}/categories`, { params }).pipe(
       tap(categories => {
+        if (walletId !== this._activeWalletId() || !this.auth.isAuthenticated()) return;
         if (!type) this._categories.set(categories);
       })
     );
@@ -158,6 +181,7 @@ export class FinanceService {
 
     return this.http.get<PaginatedResponse<Movement>>(`${this.apiUrl}/wallets/${walletId}/movements`, { params }).pipe(
       tap(response => {
+        if (walletId !== this._activeWalletId() || !this.auth.isAuthenticated()) return;
         this._movements.set(response.data);
         this._movementMeta.set(response.meta);
       })
