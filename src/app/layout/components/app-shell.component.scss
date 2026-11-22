@@ -357,3 +357,6 @@
   align-items: center;
   gap: .75rem;
 }
+
+.profile-link { text-decoration: none; cursor: pointer; }
+.profile-link:hover { opacity: .85; }
