@@ -12,6 +12,7 @@ import { LoginComponent } from './features/auth/pages/login/login.component';
 import { RegisterComponent } from './features/auth/pages/register/register.component';
 import { ForgotPasswordComponent } from './features/auth/pages/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/auth/pages/reset-password/reset-password.component';
+import { ProfileComponent } from './features/auth/pages/profile/profile.component';
 
 export const routes: Routes = [
   // Rotas Públicas de Autenticação
@@ -28,6 +29,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'carteiras' },
       { path: 'carteiras', component: WalletsComponent },
+      { path: 'perfil', component: ProfileComponent },
       { path: 'movimentacoes', component: MovementsListComponent, canActivate: [walletAccessGuard] },
       { path: 'movimentacoes/nova', component: MovementFormComponent, canActivate: [walletAccessGuard] },
       { path: 'movimentacoes/:id/editar', component: MovementFormComponent, canActivate: [walletAccessGuard] },
