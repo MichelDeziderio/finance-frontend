@@ -32,7 +32,7 @@ export class AppShellComponent {
 
   constructor() {
     effect(() => {
-      if (!this.hasNoWallets() || this.router.url.startsWith('/carteiras')) {
+      if (!this.hasNoWallets() || this.router.url.startsWith('/carteiras') || this.router.url.startsWith('/perfil')) {
         return;
       }
 
@@ -45,7 +45,7 @@ export class AppShellComponent {
   closeMenu(): void { this.isShow = false; }
 
   isMenuItemDisabled(path: string): boolean {
-    return path !== '/carteiras' && this.hasNoWallets();
+    return path !== '/carteiras' && path !== '/perfil' && this.hasNoWallets();
   }
 
   getMenuLink(path: string): string | null {
