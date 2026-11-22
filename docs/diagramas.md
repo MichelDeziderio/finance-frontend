@@ -140,87 +140,52 @@ classDiagram
 
 ## 2. Diagrama de casos de uso
 
-A notação abaixo é representada como **fluxograma Mermaid com casos de uso em elipses**, pois Mermaid não oferece um tipo UML de caso de uso nativo.
+A notação abaixo utiliza **três grupos em colunas** e **casos de uso em elipses** para tornar a leitura mais simples. Algumas ações foram agrupadas em um mesmo caso de uso; os dois blocos de 'Usuário autenticado' representam o mesmo ator, duplicado apenas para evitar linhas longas. Mermaid não oferece um tipo UML de caso de uso nativo.
 
 ~~~mermaid
 flowchart LR
-    VIS["👤 Visitante"]:::actor
-    USR["👤 Usuário autenticado"]:::actor
-
-    subgraph SYS["Finan$e — Sistema de controle financeiro"]
+    subgraph ACESSO["01 · ACESSO"]
         direction TB
+        VIS["👤 Visitante"]:::actor
+        CAD(["Criar conta"]):::usecase
+        LOGIN(["Entrar no sistema"]):::usecase
+        REC(["Recuperar ou redefinir senha"]):::usecase
 
-        subgraph AUTH["Autenticação"]
-            direction TB
-            UC_REG([Criar conta])
-            UC_LOGIN([Entrar no sistema])
-            UC_FORGOT([Solicitar recuperação de senha])
-            UC_RESET([Redefinir senha])
-            UC_LOGOUT([Sair do sistema])
-        end
-
-        subgraph WALLET["Carteiras"]
-            direction TB
-            UC_WLIST([Listar e selecionar carteiras])
-            UC_WCREATE([Criar carteira])
-            UC_WEDIT([Editar carteira])
-            UC_WDELETE([Excluir carteira])
-        end
-
-        subgraph CAT["Categorias"]
-            direction TB
-            UC_CLIST([Consultar categorias])
-            UC_CCREATE([Criar categoria])
-            UC_CDELETE([Excluir categoria personalizada])
-        end
-
-        subgraph MOV["Movimentações"]
-            direction TB
-            UC_INCOME([Cadastrar receita])
-            UC_EXPENSE([Cadastrar despesa])
-            UC_MLIST([Consultar histórico e aplicar filtros])
-            UC_MEDIT([Editar movimentação])
-            UC_MDELETE([Excluir movimentação])
-        end
-
-        subgraph DASH["Dashboard"]
-            direction TB
-            UC_DASH([Visualizar resumo financeiro])
-            UC_CHART([Consultar gráficos e indicadores])
-            UC_RECENT([Consultar últimas 10 movimentações])
-            UC_PERIOD([Filtrar dashboard por período])
-        end
+        VIS --- CAD
+        VIS --- LOGIN
+        VIS --- REC
     end
 
-    VIS --- UC_REG
-    VIS --- UC_LOGIN
-    VIS --- UC_FORGOT
-    VIS --- UC_RESET
+    subgraph GESTAO["02 · GESTÃO FINANCEIRA"]
+        direction TB
+        USR1["👤 Usuário autenticado"]:::actor
+        CART(["Carteiras<br/>Criar · selecionar · editar · excluir"]):::usecase
+        CATEG(["Categorias<br/>Consultar · criar · excluir"]):::usecase
+        MOV(["Movimentações<br/>Cadastrar receitas e despesas"]):::usecase
 
-    USR --- UC_LOGOUT
-    USR --- UC_WLIST
-    USR --- UC_WCREATE
-    USR --- UC_WEDIT
-    USR --- UC_WDELETE
-    USR --- UC_CLIST
-    USR --- UC_CCREATE
-    USR --- UC_CDELETE
-    USR --- UC_INCOME
-    USR --- UC_EXPENSE
-    USR --- UC_MLIST
-    USR --- UC_MEDIT
-    USR --- UC_MDELETE
-    USR --- UC_DASH
-    USR --- UC_CHART
-    USR --- UC_RECENT
-    USR --- UC_PERIOD
+        USR1 --- CART
+        USR1 --- CATEG
+        USR1 --- MOV
+    end
 
-    classDef actor fill:#e5f0ff,stroke:#2563eb,color:#183153,stroke-width:2px
-    style AUTH fill:#f8fafc,stroke:#94a3b8
-    style WALLET fill:#f0fdf4,stroke:#86af97
-    style CAT fill:#fff7ed,stroke:#e9a253
-    style MOV fill:#f0f9ff,stroke:#7db1d1
-    style DASH fill:#fdf4ff,stroke:#b89ac9
+    subgraph CONSULTAS["03 · CONSULTAS E CONTA"]
+        direction TB
+        USR2["👤 Usuário autenticado"]:::actor
+        HIST(["Histórico<br/>Consultar · filtrar · editar · excluir"]):::usecase
+        DASH(["Dashboard<br/>Resumo · gráficos · últimas 10 · período"]):::usecase
+        CONTA(["Conta<br/>Alterar senha · sair"]):::usecase
+
+        USR2 --- HIST
+        USR2 --- DASH
+        USR2 --- CONTA
+    end
+
+    classDef actor fill:#e8f1ff,stroke:#2563eb,color:#1e40af,stroke-width:2px
+    classDef usecase fill:#ffffff,stroke:#64748b,color:#0f172a,stroke-width:1.5px
+    style ACESSO fill:#eff6ff,stroke:#93c5fd,stroke-width:1px
+    style GESTAO fill:#f0fdf4,stroke:#86efac,stroke-width:1px
+    style CONSULTAS fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px
+    linkStyle default stroke:#94a3b8,stroke-width:1.2px
 ~~~
 
 **Observação sobre o estado atual:** o Front-end utiliza autenticação e guards de rota, mas as rotas financeiras do Back-end ainda não aplicam `JwtAuthGuard` e o schema `Wallet` não possui `ownerId`. Por isso, o diagrama não afirma isolamento de carteiras por proprietário nem inclui convites ou delegação de permissões.
