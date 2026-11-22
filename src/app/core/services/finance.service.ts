@@ -138,9 +138,10 @@ export class FinanceService {
     if (!walletId) return of([]);
     let params = new HttpParams();
     if (type) params = params.set('type', type);
+    const requestToken = this.auth.token();
     return this.http.get<Category[]>(`${this.apiUrl}/wallets/${walletId}/categories`, { params }).pipe(
       tap(categories => {
-        if (walletId !== this._activeWalletId() || !this.auth.isAuthenticated()) return;
+        if (walletId !== this._activeWalletId() || this.auth.token() !== requestToken) return;
         if (!type) this._categories.set(categories);
       })
     );
@@ -179,9 +180,10 @@ export class FinanceService {
       if (value !== undefined && value !== null && value !== '') params = params.set(key, String(value));
     });
 
+    const requestToken = this.auth.token();
     return this.http.get<PaginatedResponse<Movement>>(`${this.apiUrl}/wallets/${walletId}/movements`, { params }).pipe(
       tap(response => {
-        if (walletId !== this._activeWalletId() || !this.auth.isAuthenticated()) return;
+        if (walletId !== this._activeWalletId() || this.auth.token() !== requestToken) return;
         this._movements.set(response.data);
         this._movementMeta.set(response.meta);
       })
