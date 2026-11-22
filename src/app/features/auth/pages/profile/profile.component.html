@@ -1,0 +1,103 @@
+<section class="profile-page">
+  <header class="page-heading">
+    <h1>Meu perfil</h1>
+    <p>Consulte os dados da sua conta e atualize sua senha com segurança.</p>
+  </header>
+
+  <div class="profile-card">
+    <div class="card-heading">
+      <span class="section-icon"><i class="pi pi-user"></i></span>
+      <div>
+        <h2>Dados da conta</h2>
+        <p>Informações do usuário autenticado.</p>
+      </div>
+    </div>
+
+    <div class="account-grid">
+      <div class="info-field">
+        <span>Nome</span>
+        <strong>{{ user()?.name || 'Não informado' }}</strong>
+      </div>
+      <div class="info-field">
+        <span>E-mail</span>
+        <strong>{{ user()?.email || 'Não informado' }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-card">
+    <div class="card-heading">
+      <span class="section-icon"><i class="pi pi-lock"></i></span>
+      <div>
+        <h2>Alterar senha</h2>
+        <p>Informe a senha atual para cadastrar uma nova senha.</p>
+      </div>
+    </div>
+
+    @if (error()) {
+      <p-message severity="error" [text]="error()" />
+    }
+    @if (success()) {
+      <p-message severity="success" [text]="success()" />
+    }
+
+    <form [formGroup]="passwordForm" (ngSubmit)="submit()" class="password-form" autocomplete="off">
+      <div class="form-field">
+        <label for="current-password">Senha atual</label>
+        <p-password
+          inputId="current-password"
+          formControlName="currentPassword"
+          [toggleMask]="true"
+          [feedback]="false"
+          autocomplete="current-password"
+          placeholder="Digite a senha atual"
+          styleClass="password-input"
+          inputStyleClass="password-field"
+        />
+        @if (passwordForm.controls.currentPassword.touched && passwordForm.controls.currentPassword.invalid) {
+          <small class="field-error">Informe sua senha atual.</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="new-password">Nova senha</label>
+        <p-password
+          inputId="new-password"
+          formControlName="newPassword"
+          [toggleMask]="true"
+          [feedback]="false"
+          autocomplete="new-password"
+          placeholder="Mínimo de 6 caracteres"
+          styleClass="password-input"
+          inputStyleClass="password-field"
+        />
+        @if (passwordForm.controls.newPassword.touched && passwordForm.controls.newPassword.invalid) {
+          <small class="field-error">A nova senha deve ter pelo menos 6 caracteres.</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="confirm-password">Confirmar nova senha</label>
+        <p-password
+          inputId="confirm-password"
+          formControlName="confirmPassword"
+          [toggleMask]="true"
+          [feedback]="false"
+          autocomplete="new-password"
+          placeholder="Repita a nova senha"
+          styleClass="password-input"
+          inputStyleClass="password-field"
+        />
+        @if (passwordForm.controls.confirmPassword.touched && passwordForm.controls.confirmPassword.invalid) {
+          <small class="field-error">
+            {{ passwordForm.controls.confirmPassword.hasError('mismatch') ? 'As senhas não coincidem.' : 'Confirme a nova senha.' }}
+          </small>
+        }
+      </div>
+
+      <div class="form-actions">
+        <p-button type="submit" icon="pi pi-check" label="Salvar nova senha" [loading]="saving()" [disabled]="saving()" />
+      </div>
+    </form>
+  </div>
+</section>
