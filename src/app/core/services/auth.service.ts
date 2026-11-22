@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AuthResponse,
@@ -25,6 +25,9 @@ export class AuthService {
 
   private readonly _currentUser = signal<User | null>(this.getStoredUser());
   private readonly _token = signal<string | null>(this.getStoredToken());
+
+  private readonly sessionChangesSubject = new Subject<void>();
+  readonly sessionChanges$ = this.sessionChangesSubject.asObservable();
 
   readonly currentUser = this._currentUser.asReadonly();
   readonly token = this._token.asReadonly();
@@ -79,6 +82,7 @@ export class AuthService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     sessionStorage.removeItem('finance.active-wallet-id');
+    this.sessionChangesSubject.next();
     this.router.navigate(['/login']);
   }
 
@@ -87,6 +91,7 @@ export class AuthService {
     this._currentUser.set(auth.user);
     localStorage.setItem(TOKEN_KEY, auth.token);
     localStorage.setItem(USER_KEY, JSON.stringify(auth.user));
+    this.sessionChangesSubject.next();
   }
 
   private getStoredToken(): string | null {
