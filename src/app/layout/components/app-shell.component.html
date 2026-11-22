@@ -71,6 +71,14 @@
       </a>
 
       <a
+        routerLink="/perfil"
+        routerLinkActive="active"
+        (click)="closeMenu()">
+        <i class="pi pi-user-edit"></i>
+        <span>Meu perfil</span>
+      </a>
+
+      <a
         [routerLink]="getMenuLink('/carteiras')"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
@@ -105,12 +113,12 @@
       </div>
 
       <div class="profile-area">
-        <div class="avatar">{{ userInitials() }}</div>
+        <a class="avatar profile-link" routerLink="/perfil" title="Meu perfil" aria-label="Abrir meu perfil">{{ userInitials() }}</a>
 
-        <div class="profile-copy">
+        <a class="profile-copy profile-link" routerLink="/perfil" title="Meu perfil">
           <strong>{{ userName() }}</strong>
           <span>{{ userEmail() }}</span>
-        </div>
+        </a>
 
         <button type="button" class="btn-logout" title="Sair da conta" (click)="logout()">
           <i class="pi pi-sign-out"></i>
